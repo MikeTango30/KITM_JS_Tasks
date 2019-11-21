@@ -10,25 +10,37 @@
 
     //New Task
     (function () {
-
         class Task {
             subject;
             priority;
             deadline;
 
-            constructor(subject, priority, deadline){
+            constructor(subject = "New Task", priority = "Low", deadline = " "){
                 this.subject = subject;
                 this.priority = priority;
                 this.deadline = deadline;
             }
+
+            getSubject() {
+                return this.subject;
+            }
+
+            getPriority() {
+                return this.priority;
+            }
+
+            getDeadline() {
+                return this.deadline;
+            }
+
         }
 
-        function getFormFields() {
+        function getTaskFromForm() {
             const taskSubject = document.querySelector('#taskSubject');
             const taskPriority = document.querySelector('#taskPriority');
             const taskDueDate = document.querySelector('#taskDueDate');
-            let taskFormFields = [];
 
+            return new Task(taskSubject.value, taskPriority.value, taskDueDate.value);
         }
 
         const newTaskForm = document.querySelector('.new-task-form');
@@ -41,9 +53,8 @@
         addTask.addEventListener('click', function (e) {
             newTaskForm.classList.add(displayNoneClass);
             newTask.classList.remove(displayNoneClass);
-            getFormFields();
-        })
-
+            let task = getTaskFromForm();
+        });
     })();
 
 
