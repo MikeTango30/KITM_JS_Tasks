@@ -1,31 +1,64 @@
 'use strict';
 
 (function () {
+    const displayNoneClass = 'd-none';
+
+    //App Name
     const appName = "Task-O-Mizer";
     const appTitle = document.querySelector('.app-title');
     appTitle.textContent = appName;
 
-    //Add  New Task
-    //const
+    //New Task
+    (function () {
 
-    const newTask = document.querySelector('.add-task');
-    newTask.onclick = function (e) {
-        
-    }
+        class Task {
+            subject;
+            priority;
+            deadline;
+
+            constructor(subject, priority, deadline){
+                this.subject = subject;
+                this.priority = priority;
+                this.deadline = deadline;
+            }
+        }
+
+        function getFormFields() {
+            const taskSubject = document.querySelector('#taskSubject');
+            const taskPriority = document.querySelector('#taskPriority');
+            const taskDueDate = document.querySelector('#taskDueDate');
+            let taskFormFields = [];
+
+        }
+
+        const newTaskForm = document.querySelector('.new-task-form');
+        const newTask = document.querySelector('.new-task');
+        const addTask = document.querySelector('.add-task');
+        newTask.addEventListener('click', function (e) {
+            newTaskForm.classList.remove(displayNoneClass);
+            newTask.classList.add(displayNoneClass);
+        });
+        addTask.addEventListener('click', function (e) {
+            newTaskForm.classList.add(displayNoneClass);
+            newTask.classList.remove(displayNoneClass);
+            getFormFields();
+        })
+
+    })();
 
 
     //Table Headers
     let tableHeaders = [
-                                'Icon',
-                                'Subject',
-                                'Select',
-                                'Remove',
-                                'Priority',
-                                'Due date',
-                                'Sort', 'Status',
-                                'Percent Completed',
-                                'Modified on'
-                                ];
+        'Icon',
+        'Subject',
+        'Select',
+        'Remove',
+        'Priority',
+        'Due date',
+        'Sort', 'Status',
+        'Percent Completed',
+        'Modified on'
+    ];
 
     function createTableHeadColumn(name) {
         const tasksTableColumn = document.createElement('th');
@@ -35,7 +68,7 @@
         return tasksTableColumn;
     }
 
-    function createTableHeaders (headerNames) {
+    function createTableHeaders(headerNames) {
         const tasksTable = document.querySelector('table');
         const tasksTableHead = document.createElement('thead');
         const tasksTableRow = document.createElement('tr');
@@ -46,7 +79,7 @@
         tasksTableHead.appendChild(tasksTableRow);
         tasksTable.appendChild(tasksTableHead);
 
-        for(let tableHeader of headerNames) {
+        for (let tableHeader of headerNames) {
             tasksTableRow.appendChild(createTableHeadColumn(tableHeader));
         }
     }
