@@ -1,0 +1,15 @@
+html {
+  font-family: 'Baskervville', serif; }
+
+.container {
+  max-width: 95%; }
+
+.wrapper {
+  margin: 1rem;
+  padding: .5rem; }
+
+.headings {
+  padding-left: 4rem;
+  border-bottom: 1px solid #999; }
+
+/*# sourceMappingURL=styles.css.map */
