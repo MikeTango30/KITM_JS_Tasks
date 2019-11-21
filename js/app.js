@@ -2,6 +2,7 @@
 
 (function () {
     const displayNoneClass = 'd-none';
+    const tasksTable = document.querySelector('table');
 
     //App Name
     const appName = "Task-O-Mizer";
@@ -80,7 +81,6 @@
     }
 
     function createTableHeaders(headerNames) {
-        const tasksTable = document.querySelector('table');
         const tasksTableHead = document.createElement('thead');
         const tasksTableRow = document.createElement('tr');
 
@@ -94,13 +94,17 @@
             tasksTableRow.appendChild(createTableHeadColumn(tableHeader));
         }
     }
-
     createTableHeaders(tableHeaders);
+
+    //Table Body
+    (function () {
+        const tasksTableBody = document.createElement('tbody');
+        tasksTable.appendChild(tasksTableBody);
+    })();
+
+
 
     //TODO table header Diagram icon, Sorting icon, Remove icon
 
-    //Table Body
-    // const tasksTableBody = document.createElement('tbody');
-    // tasksTable.appendChild(tasksTableBody);
 
 })();
