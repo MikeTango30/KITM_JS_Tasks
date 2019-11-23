@@ -43,4 +43,15 @@ input[type="checkbox"]:checked ~ span {
   .priority.high {
     background-color: #ff2700; }
 
+.progress {
+  background-color: transparent; }
+  .progress.task-completeness-0 .progress-bar {
+    width: 0; }
+  .progress.task-completeness-100 .progress-bar {
+    width: 100%; }
+
+.progress-bar {
+  margin-left: 1rem;
+  border-radius: 50px; }
+
 /*# sourceMappingURL=styles.css.map */

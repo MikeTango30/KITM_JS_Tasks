@@ -16,7 +16,7 @@
             this._icon = 'check';
             //this._remove = 0;
             this._status = 'New';
-            this._completeness = 0;
+            this._completeness = '0%';
             this._modifiedOn = new Date();
             this._subject = subject;
             this._priority = priority;
@@ -41,9 +41,8 @@
     const iconCheck = 'check';
     const iconDiamond = 'diamond';
     const subjectName = 'task-subject';
-    const subjectNameChecked = 'task-subject-checked';
     const taskStatusNew = 'task-status-new';
-    const taskCompletenessZero = 'task-completeness-zero';
+    const taskCompletenessZero = 'task-completeness-0';
     const taskCompletenessDone = 'task-completeness-100';
     const strikethrough = 'strikethrough';
     const checkbox = 'checkbox';
@@ -169,19 +168,40 @@
         }
     }
 
-    // Subject Check Mark
+    // Subject Check Mark: strikethrough subject, progress bar
     function addCheckboxFunctionality() {
         const subjectChecks = document.querySelectorAll('.' + checkmark);
         for(let subjectCheck of subjectChecks) {
             subjectCheck.addEventListener('change', function (e) {
                 const taskName = subjectCheck.nextSibling;
+                const completeness = subjectCheck.parentElement.nextSibling.nextSibling.
+                                                                nextSibling.nextSibling.
+                                                                firstChild.firstChild;
                 const target = e.target;
                 taskName.classList.remove(strikethrough);
+                completeness.textContent = '0%';
+                completeness.parentElement.classList.add(taskCompletenessZero);
+                completeness.parentElement.classList.remove(taskCompletenessDone);
                 if (target.checked === true) {
                     taskName.classList.add(strikethrough);
+                    completeness.textContent = '100%';
+                    completeness.parentElement.classList.remove(taskCompletenessZero);
+                    completeness.parentElement.classList.add(taskCompletenessDone)
                 }
             })
         }
+    }
+
+    function addProgressBar(tableDataSpan, tableData) {
+        // const progressBarContainer = document.createElement('span');
+        const progressBar = document.createElement('span');
+        // progressBarContainer.classList.add('progress');
+        tableDataSpan.classList.add('progress', taskCompletenessZero);
+        progressBar.classList.add('progress-bar',  'bg-success');
+        // progressBar.setAttribute('style', 'width: 1%');
+        // progressBarContainer.appendChild(progressBar);
+        tableDataSpan.appendChild(progressBar);//Container);
+        tableData.appendChild(tableDataSpan);
     }
 
     // Insert new Task
@@ -194,13 +214,12 @@
             for (let [key, value] of Object.entries(task)) {
                 const tableData = document.createElement('td');
                 const tableDataSpan = document.createElement('span');
-
                 tableData.appendChild(tableDataSpan);
                 tableDataSpan.textContent = value;
 
                 key === taskIcon && tableDataSpan.classList.add(iconCheck);
                 key === taskStatus && tableDataSpan.classList.add(taskStatusNew);
-                key === taskCompleteness && tableDataSpan.classList.add(taskCompletenessZero);
+                key === taskCompleteness && addProgressBar(tableDataSpan, tableData);
                 key === taskSubject && createCheckBox(tableDataSpan, tableData);
                 key === taskPriority && addPriority(tableDataSpan, value);
 
@@ -210,8 +229,5 @@
             addCheckboxFunctionality();
         });
     })();
-
     //TODO table header Diagram icon, Sorting icon, Remove icon
-
-
 })();
