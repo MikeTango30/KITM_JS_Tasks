@@ -12,4 +12,35 @@ html {
   padding-left: 4rem;
   border-bottom: 1px solid #999; }
 
+input[type="checkbox"] {
+  display: none; }
+
+.checkmark {
+  color: #bdc2bd;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  cursor: pointer; }
+
+input[type="checkbox"]:checked ~ span {
+  color: #1DFF03; }
+
+.strikethrough {
+  text-decoration: line-through;
+  color: #b0bec4; }
+
+.priority {
+  display: block;
+  text-align: center;
+  font-size: .75rem;
+  color: #fff;
+  border-radius: 50px;
+  padding: .35rem .8rem;
+  width: 70px; }
+  .priority.low {
+    background-color: #1DFF03; }
+  .priority.medium {
+    background-color: #0073ff; }
+  .priority.high {
+    background-color: #ff2700; }
+
 /*# sourceMappingURL=styles.css.map */

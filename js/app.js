@@ -5,16 +5,16 @@
     class Task {
         _icon;
         _subject;
-        _remove;
+        //_remove;
         _priority;
         _deadline;
         _status;
         _completeness;
         _modifiedOn;
 
-        constructor(subject = "New Task", priority = "Low", deadline = " ") {
+        constructor(subject, priority, deadline) {
             this._icon = 'check';
-            this._remove = 0;
+            //this._remove = 0;
             this._status = 'New';
             this._completeness = 0;
             this._modifiedOn = new Date();
@@ -22,73 +22,35 @@
             this._priority = priority;
             this._deadline = deadline;
         }
-        get icon() {
-            return this._icon;
-        }
-
-        set icon(value) {
-            this._icon = value;
-        }
-
-        get remove() {
-            return this._remove;
-        }
-
-        set remove(value) {
-            this._remove = value;
-        }
-
-        get subject() {
-            return this._subject;
-        }
-
-        set subject(value) {
-            this._subject = value;
-        }
-
-        get priority() {
-            return this._priority;
-        }
-
-        set priority(value) {
-            this._priority = value;
-        }
-
-        get deadline() {
-            return this._deadline;
-        }
-
-        set deadline(value) {
-            this._deadline = value;
-        }
-
-        get status() {
-            return this._status;
-        }
-
-        set status(value) {
-            this._status = value;
-        }
-
-        get completeness() {
-            return this._completeness;
-        }
-
-        set completeness(value) {
-            this._completeness = value;
-        }
-
-        get modifiedOn() {
-            return this._modifiedOn;
-        }
-
-        set modifiedOn(value) {
-            this._modifiedOn = value;
-        }
     }
 
-    //Basic vars
+    //Task's property names
+    let taskIcon = '_icon';
+    let taskSubject = '_subject';
+    let taskPriority = '_priority';
+    let taskStatus = '_status';
+    let taskCompleteness = '_completeness';
+
+    //Classes
     const displayNoneClass = 'd-none';
+    const priority = 'priority';
+    const priorityLow = 'low';
+    const priorityMedium = 'medium';
+    const priorityHigh = 'high';
+    const priorityNone = 'none'; //for default case
+    const iconCheck = 'check';
+    const iconDiamond = 'diamond';
+    const subjectName = 'task-subject';
+    const subjectNameChecked = 'task-subject-checked';
+    const taskStatusNew = 'task-status-new';
+    const taskCompletenessZero = 'task-completeness-zero';
+    const taskCompletenessDone = 'task-completeness-100';
+    const strikethrough = 'strikethrough';
+    const checkbox = 'checkbox';
+    const checkmark = 'checkmark';
+
+
+    //Elements
     const tasksTable = document.querySelector('table');
     const newTaskForm = document.querySelector('.new-task-form');
     const newTask = document.querySelector('.new-task');
@@ -101,7 +63,7 @@
         'Icon',
         'Subject',
         //'Select',
-        'Remove',
+        //'Remove',
         'Priority',
         'Due date',
         //'Sort',
@@ -111,13 +73,11 @@
     ];
 
     //App Name
-    (function () {
-        const appName = "Task-O-Mizer";
-        const appTitle = document.querySelector('.app-title');
-        appTitle.textContent = appName
-    })();
+    const appName = "Task-O-Mizer";
+    const appTitle = document.querySelector('.app-title');
+    appTitle.textContent = appName;
 
-    //Create Task Object from Form Data
+    //Create Task from Form Data
     function getTaskFromForm() {
         const taskSubject = document.querySelector('#taskSubject');
         const taskPriority = document.querySelector('#taskPriority');
@@ -138,22 +98,9 @@
             newTaskForm.classList.add(displayNoneClass);
             newTask.classList.remove(displayNoneClass);
         });
-    })();
-
-    // Insert new Task: Object
-    (function () {
-        addTask.addEventListener('click', function (e) {
-            newTaskForm.classList.add(displayNoneClass);
-            newTask.classList.remove(displayNoneClass);
-            let task = getTaskFromForm();
-            const tableRow = document.createElement('tr');
-            for (let [, value] of Object.entries(task)) {
-                const tableData = document.createElement('td');
-                tableData.textContent = value;
-                tableRow.appendChild(tableData);
-                tasksTableBody.appendChild(tableRow);
-            }
-        })
+        let dateValue = document.querySelector('#taskDueDate');
+        let today = new Date();
+        dateValue.setAttribute('value', today.toLocaleDateString("lt"));
     })();
 
     //Create Table Column Header
@@ -183,10 +130,86 @@
     createTableHeaders(tableHeaders);
 
     //Table Body
-    (function () {
-        tasksTable.appendChild(tasksTableBody);
-    })();
+    tasksTable.appendChild(tasksTableBody);
 
+    //Create Checkbox
+    let id = 1;
+    function createCheckBox(tableDataSpan, tableData) {
+        let checkboxId = checkbox + '-' + id;
+        tableDataSpan.classList.add(subjectName);
+        const checkboxLabel = document.createElement('label');
+        const checkboxInput = document.createElement('input');
+        const checkMark = document.createElement('span');
+        checkboxLabel.setAttribute('for', checkboxId);
+        checkboxInput.setAttribute('type', checkbox);
+        checkboxInput.setAttribute('id', checkboxId);
+        checkMark.classList.add(checkbox);
+        checkboxLabel.classList.add(checkmark);
+        checkMark.innerHTML = "<i class=\"fas fa-check\"></i>";
+        checkboxLabel.appendChild(checkboxInput);
+        checkboxLabel.appendChild(checkMark);
+        tableData.prepend(checkboxLabel);
+        id++;
+    }
+
+    //Add Priority Class
+    function addPriority(tableDataSpan, value) {
+        switch (value) {
+            case 'Low':
+                tableDataSpan.classList.add(priority, priorityLow);
+                break;
+            case 'Medium':
+                tableDataSpan.classList.add(priority, priorityMedium);
+                break;
+            case 'High':
+                tableDataSpan.classList.add(priority, priorityHigh);
+                break;
+            default:
+                tableDataSpan.classList.add(priority, priorityNone);
+        }
+    }
+
+    // Subject Check Mark
+    function addCheckboxFunctionality() {
+        const subjectChecks = document.querySelectorAll('.' + checkmark);
+        for(let subjectCheck of subjectChecks) {
+            subjectCheck.addEventListener('change', function (e) {
+                const taskName = subjectCheck.nextSibling;
+                const target = e.target;
+                taskName.classList.remove(strikethrough);
+                if (target.checked === true) {
+                    taskName.classList.add(strikethrough);
+                }
+            })
+        }
+    }
+
+    // Insert new Task
+    (function () {
+        addTask.addEventListener('click', function (e) {
+            newTaskForm.classList.add(displayNoneClass);
+            newTask.classList.remove(displayNoneClass);
+            let task = getTaskFromForm();
+            const tableRow = document.createElement('tr');
+            for (let [key, value] of Object.entries(task)) {
+                const tableData = document.createElement('td');
+                const tableDataSpan = document.createElement('span');
+
+                tableData.appendChild(tableDataSpan);
+                tableDataSpan.textContent = value;
+
+                key === taskIcon && tableDataSpan.classList.add(iconCheck);
+                key === taskStatus && tableDataSpan.classList.add(taskStatusNew);
+                key === taskCompleteness && tableDataSpan.classList.add(taskCompletenessZero);
+                key === taskSubject && createCheckBox(tableDataSpan, tableData);
+                key === taskPriority && addPriority(tableDataSpan, value);
+
+                tableRow.appendChild(tableData);
+                tasksTableBody.appendChild(tableRow);
+            }
+            addCheckboxFunctionality();
+        });
+    })();
 
     //TODO table header Diagram icon, Sorting icon, Remove icon
 
