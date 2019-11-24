@@ -12,6 +12,21 @@ html {
   padding-left: 4rem;
   border-bottom: 1px solid #999; }
 
+.check {
+  padding: .5rem .75rem;
+  color: #fff;
+  background-color: #1DFF03;
+  border-radius: 50%; }
+
+td {
+  height: 54px; }
+
+.chart-icon {
+  width: 50px; }
+
+.table .subject-header {
+  padding-left: 3rem; }
+
 input[type="checkbox"] {
   display: none; }
 
@@ -27,6 +42,11 @@ input[type="checkbox"]:checked ~ span {
 .strikethrough {
   text-decoration: line-through;
   color: #b0bec4; }
+
+.remove-task {
+  margin-right: 2rem;
+  float: right;
+  cursor: pointer; }
 
 .priority {
   display: block;

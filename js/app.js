@@ -30,6 +30,7 @@
     let taskPriority = '_priority';
     let taskStatus = '_status';
     let taskCompleteness = '_completeness';
+    let taskDeadline = '_deadline';
 
     //Classes
     const displayNoneClass = 'd-none';
@@ -47,6 +48,10 @@
     const strikethrough = 'strikethrough';
     const checkbox = 'checkbox';
     const checkmark = 'checkmark';
+    const deadline = 'deadline';
+    const removeTask = 'remove-task';
+    const tableSubjectHeader = 'subject-header';
+    const chartIcon = 'chart-icon';
 
 
     //Elements
@@ -59,7 +64,7 @@
 
     //Table Headers
     let tableHeaders = [
-        'Icon',
+        'Chart',
         'Subject',
         //'Select',
         //'Remove',
@@ -107,6 +112,13 @@
         const tasksTableColumn = document.createElement('th');
         tasksTableColumn.setAttribute('scope', 'col');
         tasksTableColumn.textContent = name;
+        if (name === 'Chart') {
+            tasksTableColumn.innerHTML = "<i class=\"fas fa-chart-bar\"></i>";
+            tasksTableColumn.classList.add(chartIcon);
+        }
+        name === 'Subject' && tasksTableColumn.classList.add(tableSubjectHeader);
+
+
 
         return tasksTableColumn;
     }
@@ -151,6 +163,19 @@
         id++;
     }
 
+    //Remove item
+    function createRemoveTask(tableData) {
+        const trashIcon = document.createElement('span');
+        trashIcon.innerHTML = "<i class=\"far fa-trash-alt\"></i>";
+        trashIcon.classList.add(removeTask);
+        tableData.appendChild(trashIcon);
+        trashIcon.addEventListener('click', function (e) {
+            let target = e.target;
+            let tableRow = target.parentElement.parentElement.parentElement;
+            confirm('Do you want to delete this task?') && tableRow.classList.add(displayNoneClass);
+        })
+    }
+
     //Add Priority Class
     function addPriority(tableDataSpan, value) {
         switch (value) {
@@ -168,22 +193,31 @@
         }
     }
 
-    // Subject Check Mark: strikethrough subject, progress bar
-    function addCheckboxFunctionality() {
+    //Checkbox functionality
+    function onCheckStrikethrough() {
         const subjectChecks = document.querySelectorAll('.' + checkmark);
         for(let subjectCheck of subjectChecks) {
             subjectCheck.addEventListener('change', function (e) {
                 const taskName = subjectCheck.nextSibling;
+                const target = e.target;
+                target.checked === true ? taskName.classList.add(strikethrough) :
+                                          taskName.classList.remove(strikethrough);
+            })
+        }
+    }
+
+    function onCheckCompleteness() {
+        const subjectChecks = document.querySelectorAll('.' + checkmark);
+        for(let subjectCheck of subjectChecks) {
+            subjectCheck.addEventListener('change', function (e) {
                 const completeness = subjectCheck.parentElement.nextSibling.nextSibling.
                                                                 nextSibling.nextSibling.
                                                                 firstChild.firstChild;
                 const target = e.target;
-                taskName.classList.remove(strikethrough);
                 completeness.textContent = '0%';
                 completeness.parentElement.classList.add(taskCompletenessZero);
                 completeness.parentElement.classList.remove(taskCompletenessDone);
                 if (target.checked === true) {
-                    taskName.classList.add(strikethrough);
                     completeness.textContent = '100%';
                     completeness.parentElement.classList.remove(taskCompletenessZero);
                     completeness.parentElement.classList.add(taskCompletenessDone)
@@ -193,14 +227,10 @@
     }
 
     function addProgressBar(tableDataSpan, tableData) {
-        // const progressBarContainer = document.createElement('span');
         const progressBar = document.createElement('span');
-        // progressBarContainer.classList.add('progress');
         tableDataSpan.classList.add('progress', taskCompletenessZero);
         progressBar.classList.add('progress-bar',  'bg-success');
-        // progressBar.setAttribute('style', 'width: 1%');
-        // progressBarContainer.appendChild(progressBar);
-        tableDataSpan.appendChild(progressBar);//Container);
+        tableDataSpan.appendChild(progressBar);
         tableData.appendChild(tableDataSpan);
     }
 
@@ -217,17 +247,26 @@
                 tableData.appendChild(tableDataSpan);
                 tableDataSpan.textContent = value;
 
-                key === taskIcon && tableDataSpan.classList.add(iconCheck);
+                if (key === taskIcon) {
+                    tableDataSpan.classList.add(iconCheck);
+                    tableDataSpan.innerHTML = "<i class=\"fas fa-check-square\"></i>";
+                }
                 key === taskStatus && tableDataSpan.classList.add(taskStatusNew);
+                key === taskDeadline && tableDataSpan.classList.add(deadline);
                 key === taskCompleteness && addProgressBar(tableDataSpan, tableData);
-                key === taskSubject && createCheckBox(tableDataSpan, tableData);
                 key === taskPriority && addPriority(tableDataSpan, value);
+                if (key === taskSubject) {
+                    createCheckBox(tableDataSpan, tableData);
+                    createRemoveTask(tableData);
+                    tableData.setAttribute('style', 'max-width: 250px');
+                }
 
                 tableRow.appendChild(tableData);
                 tasksTableBody.appendChild(tableRow);
             }
-            addCheckboxFunctionality();
+            onCheckStrikethrough();
+            onCheckCompleteness();
         });
     })();
-    //TODO table header Diagram icon, Sorting icon, Remove icon
+    //TODO sort
 })();
