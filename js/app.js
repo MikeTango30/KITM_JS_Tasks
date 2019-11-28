@@ -168,11 +168,21 @@
         const trashIcon = document.createElement('span');
         trashIcon.innerHTML = "<i class=\"far fa-trash-alt\"></i>";
         trashIcon.classList.add(removeTask);
+        trashIcon.setAttribute("data-toggle", "modal");
+        trashIcon.setAttribute("data-target", "#removeConfirmModal");
+        trashIcon.style.padding = ".2rem";
         tableData.appendChild(trashIcon);
-        trashIcon.addEventListener('click', function (e) {
+        trashIcon.firstChild.addEventListener('click', function (e) {
             let target = e.target;
             let tableRow = target.parentElement.parentElement.parentElement;
-            confirm('Do you want to delete this task?') && tableRow.classList.add(displayNoneClass);
+
+            $('#removeConfirmModal').on('shown.bs.modal', function () {
+                $('#removeConfirmModal').trigger('focus');
+                $('#remove').bind('click', function () {
+                    $('#removeConfirmModal').modal('toggle');
+                    tableRow.remove();
+                })
+            })
         })
     }
 
@@ -246,6 +256,7 @@
                 const tableDataSpan = document.createElement('span');
                 tableData.appendChild(tableDataSpan);
                 tableDataSpan.textContent = value;
+                tableDataSpan.setAttribute('contentEditable', 'true');
 
                 if (key === taskIcon) {
                     tableDataSpan.classList.add(iconCheck);
@@ -268,5 +279,4 @@
             onCheckCompleteness();
         });
     })();
-    //TODO sort
 })();
