@@ -5,7 +5,6 @@
     class Task {
         _icon;
         _subject;
-        //_remove;
         _priority;
         _deadline;
         _status;
@@ -14,7 +13,6 @@
 
         constructor(subject, priority, deadline) {
             this._icon = 'check';
-            //this._remove = 0;
             this._status = 'New';
             this._completeness = '0%';
             this._modifiedOn = new Date();
@@ -40,7 +38,6 @@
     const priorityHigh = 'high';
     const priorityNone = 'none'; //for default case
     const iconCheck = 'check';
-    const iconDiamond = 'diamond';
     const subjectName = 'task-subject';
     const taskStatusNew = 'task-status-new';
     const taskCompletenessZero = 'task-completeness-0';
@@ -66,11 +63,8 @@
     let tableHeaders = [
         'Chart',
         'Subject',
-        //'Select',
-        //'Remove',
         'Priority',
         'Due date',
-        //'Sort',
         'Status',
         'Percent Completed',
         'Modified on'
@@ -81,7 +75,7 @@
     const appTitle = document.querySelector('.app-title');
     appTitle.textContent = appName;
 
-    //Create Task from Form Data
+    //Create Task object from Form Data
     function getTaskFromForm() {
         const taskSubject = document.querySelector('#taskSubject');
         const taskPriority = document.querySelector('#taskPriority');
@@ -89,6 +83,7 @@
         const newTask = new Task(taskSubject.value, taskPriority.value, taskDueDate.value);
         newTask._modifiedOn = newTask._modifiedOn.toLocaleDateString("lt") + ' ' +
                                       newTask._modifiedOn.toLocaleTimeString("lt");
+
         return newTask;
     }
 
@@ -117,8 +112,6 @@
             tasksTableColumn.classList.add(chartIcon);
         }
         name === 'Subject' && tasksTableColumn.classList.add(tableSubjectHeader);
-
-
 
         return tasksTableColumn;
     }
@@ -175,7 +168,7 @@
         trashIcon.firstChild.addEventListener('click', function (e) {
             let target = e.target;
             let tableRow = target.parentElement.parentElement.parentElement;
-
+            //Modal
             $('#removeConfirmModal').on('shown.bs.modal', function () {
                 $('#removeConfirmModal').trigger('focus');
                 $('#remove').bind('click', function () {
